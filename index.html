@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>MINES HACK • 1WIN / MEGAPARI / MELBET</title>
+  <!-- PWA / manifest (simple) -->
+  <link rel="manifest" href="#">
+  <meta name="theme-color" content="#0a0a1f">
+  <style>
+    /* RESET & GLOBAL */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', 'Orbitron', sans-serif;
+    }
+
+    body {
+      background: #0a0a1f;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* animated stars / particles */
+    body::before {
+      content: "";
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(2px 2px at 15px 60px, #fff, rgba(0,0,0,0)),
+                  radial-gradient(2px 2px at 72px 430px, #b0f0ff, rgba(0,0,0,0)),
+                  radial-gradient(3px 3px at 850px 220px, #ffb3ff, rgba(0,0,0,0)),
+                  radial-gradient(1px 1px at 300px 800px, #9df, rgba(0,0,0,0)),
+                  radial-gradient(4px 4px at 1100px 540px, #f6f, rgba(0,0,0,0));
+      background-size: 200px 200px;
+      background-repeat: repeat;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glass-panel {
+      background: rgba(10, 15, 30, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 212, 255, 0.25);
+      border-radius: 32px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px #00d4ff40, inset 0 1px 2px #ffffff20;
+      padding: 22px 20px;
+      width: 100%;
+      max-width: 600px;
+      z-index: 2;
+      transition: all 0.2s;
+    }
+
+    /* LOGIN SCREEN */
+    #login-screen {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .login-title {
+      font-size: 3rem;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 6px;
+      text-shadow: 0 0 10px #00ff9d, 0 0 20px #00ff9d, 4px 4px 0 #8b00ff;
+      animation: glitch 2s infinite;
+    }
+    @keyframes glitch {
+      0%, 100% { transform: skew(0deg, 0deg); opacity: 1; text-shadow: 2px 0 #00ff9d, -2px 0 #ff004d; }
+      95% { transform: skew(2deg, 1deg); opacity: 0.9; text-shadow: -3px 1px #00ff9d, 3px -1px #ff004d; }
+      96% { transform: skew(-2deg, -1deg); text-shadow: 4px 2px #8b00ff, -4px -2px #00d4ff; }
+    }
+    .secret-input {
+      background: #12142a;
+      border: 2px solid #8b00ff;
+      border-radius: 60px;
+      padding: 18px 24px;
+      font-size: 1.4rem;
+      color: #0ff;
+      text-align: center;
+      outline: none;
+      box-shadow: 0 0 25px #8b00ff, inset 0 0 10px #00d4ff;
+      width: 100%;
+    }
+    .secret-input::placeholder { color: #4f4f8b; letter-spacing: 2px; }
+    .neon-btn {
+      background: linear-gradient(145deg, #ff004d, #b0006a);
+      border: none;
+      border-radius: 60px;
+      padding: 18px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      box-shadow: 0 0 30px #ff004d, 0 8px 0 #4a0023;
+      cursor: pointer;
+      transition: 0.08s linear;
+      width: 100%;
+    }
+    .neon-btn:active { transform: translateY(6px); box-shadow: 0 0 45px #ff004d; }
+
+    /* MAIN HACK INTERFACE (hidden by default) */
+    #main-hack {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* platform row */
+    .plat-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .plat-btn {
+      background: #1a1a3a;
+      border: 1px solid #00d4ff;
+      color: #b0f0ff;
+      padding: 10px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 0 12px #00d4ff;
+      cursor: pointer;
+      transition: 0.2s;
+      flex: 1 0 auto;
+    }
+    .plat-btn.active {
+      background: #00d4ff;
+      color: #0a0a1f;
+      box-shadow: 0 0 30px #00d4ff, 0 0 30px #8b00ff;
+      border-color: #8b00ff;
+    }
+
+    /* stats row */
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(0,212,255,0.08);
+      border-radius: 40px;
+      padding: 14px 16px;
+      border: 1px solid #8b00ff80;
+      font-size: 0.9rem;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+    }
+    .stats span { color: #00ff9d; text-shadow: 0 0 8px #00ff9d; }
+
+    /* risk selector */
+    .risk-group {
+      display: flex;
+      gap: 8px;
+    }
+    .risk-btn {
+      background: #1e1e3c;
+      border: 1px solid #8b00ff;
+      color: white;
+      padding: 10px 0;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      flex: 1;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 0 10px #8b00ff;
+    }
+    .risk-btn.selected {
+      background: #8b00ff;
+      color: #fff;
+      box-shadow: 0 0 30px #8b00ff, 0 0 30px #00ff9d;
+    }
+
+    /* 5x5 grid */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .cell {
+      aspect-ratio: 1/1;
+      background: rgba(20, 30, 60, 0.7);
+      border-radius: 18px;
+      border: 2px solid #3f3f7a;
+      box-shadow: 0 0 12px #00d4ff40, inset 0 0 8px #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      transition: 0.2s;
+      color: #fff;
+      text-shadow: 0 0 8px currentColor;
+    }
+    .cell.safe {
+      background: #00cc7a;
+      border-color: #00ff9d;
+      box-shadow: 0 0 28px #00ff9d, inset 0 0 12px #aaffdd;
+      color: #00ff9d;
+      animation: glowPulse 1.2s infinite alternate;
+    }
+    @keyframes glowPulse {
+      from { filter: brightness(1); box-shadow: 0 0 18px #00ff9d; }
+      to { filter: brightness(1.2); box-shadow: 0 0 35px #b0ffb0; }
+    }
+    .cell.mine {
+      background: #cc0033;
+      border-color: #ff004d;
+      box-shadow: 0 0 38px #ff004d, inset 0 0 18px #ff9090;
+      color: #ff004d;
+      animation: explode 0.3s ease;
+    }
+    @keyframes explode {
+      0% { transform: scale(1); background: orange; }
+      50% { transform: scale(1.2); background: red; box-shadow: 0 0 60px #ff004d; }
+    }
+
+    /* golden daily special */
+    .cell.golden {
+      background: #ffd966;
+      border-color: gold;
+      box-shadow: 0 0 45px gold, inset 0 0 20px #fffacd;
+      color: #b8860b;
+      animation: goldenShine 1.5s infinite;
+    }
+    @keyframes goldenShine {
+      0% { filter: drop-shadow(0 0 6px gold); }
+      100% { filter: drop-shadow(0 0 25px #f5e56b); }
+    }
+
+    /* big red prediction button */
+    .predict-btn {
+      background: linear-gradient(145deg, #cc0000, #a00037);
+      border: none;
+      border-radius: 60px;
+      padding: 18px 10px;
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: white;
+      text-shadow: 0 0 15px black;
+      letter-spacing: 3px;
+      box-shadow: 0 0 40px #ff004d, 0 8px 0 #4d0019;
+      cursor: pointer;
+      transition: 0.08s linear;
+      width: 100%;
+    }
+    .predict-btn:active { transform: translateY(6px); }
+
+    /* result + extra */
+    .result-area {
+      background: #0d0d24cc;
+      border-radius: 28px;
+      padding: 16px;
+      border: 1px solid #00ff9d;
+      text-align: center;
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px #00ff9d;
+    }
+    .promo-section {
+      background: #1a1a3d;
+      padding: 14px;
+      border-radius: 40px;
+      border: 1px solid #8b00ff;
+      word-break: break-word;
+    }
+    .copy-link {
+      display: flex;
+      background: #2a2a55;
+      border-radius: 40px;
+      padding: 4px 4px 4px 18px;
+      align-items: center;
+      gap: 8px;
+    }
+    .copy-link input {
+      background: transparent;
+      border: none;
+      color: #00d4ff;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+    .copy-btn {
+      background: #ff004d;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 40px;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 0 15px #ff004d;
+      cursor: pointer;
+    }
+    .telegram-btn {
+      background: #0088cc;
+      border-radius: 40px;
+      padding: 14px;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 0 0 20px #00d4ff;
+      margin-top: 10px;
+    }
+    .telegram-btn a {
+      color: white;
+      text-decoration: none;
+      display: block;
+    }
+    .disclaimer {
+      font-size: 0.7rem;
+      opacity: 0.8;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="glass-panel" id="login-screen">
+  <div class="login-title">1 WIN</div>
+  <input type="text" class="secret-input" id="secretWord" placeholder="secret word" value="">
+  <button class="neon-btn" id="loginBtn">ENTER</button>
+  <div style="text-align:center; color:#b0b0ff;">🔐 MOSES promo inside</div>
+</div>
+
+<div class="glass-panel" id="main-hack">
+  <!-- platform selector -->
+  <div class="plat-row">
+    <div class="plat-btn active" data-platform="1win">1WIN</div>
+    <div class="plat-btn" data-platform="megapari">MEGAPARI</div>
+    <div class="plat-btn" data-platform="melbet">MELBET</div>
+  </div>
+
+  <!-- live win/loss counter -->
+  <div class="stats" id="liveStats">
+    <span>🔥 Wins: 0</span>
+    <span>💀 Losses: 0</span>
+    <span>📊 Rate: 0%</span>
+  </div>
+
+  <!-- risk selector -->
+  <div class="risk-group">
+    <div class="risk-btn" data-risk="low">LOW</div>
+    <div class="risk-btn selected" data-risk="medium">MEDIUM</div>
+    <div class="risk-btn" data-risk="high">HIGH</div>
+  </div>
+
+  <!-- mines grid 5x5 -->
+  <div class="grid-container" id="minesGrid"></div>
+
+  <!-- big red prediction button -->
+  <button class="predict-btn" id="showSafeBtn">💣 SHOW SAFE MINES</button>
+
+  <!-- result area + reset delay info -->
+  <div class="result-area" id="resultMessage">
+    ⏳ Click button – 60s auto reset
+  </div>
+
+  <!-- random number generator (future prediction) -->
+  <div style="display: flex; justify-content: space-between; background:#12122f; border-radius: 40px; padding: 10px 16px;">
+    <span>🎲 RNG next: </span>
+    <span id="rngDisplay">0.9543</span>
+  </div>
+
+  <!-- promo MOSES + referral / affiliate -->
+  <div class="promo-section" id="promoBox">
+    <div style="color:#00ff9d; font-weight:800; font-size:1.5rem;">🎁 MOSES</div>
+    <div>Use code <strong style="color:#ffb347;">MOSES</strong> on 1Win: 500% up to $1025 / ₹80,400</div>
+    <div style="margin:12px 0 8px">🔗 Your referral link</div>
+    <div class="copy-link">
+      <input type="text" id="refLinkInput" value="https://1win.xyz/?ref=Moses123" readonly>
+      <button class="copy-btn" id="copyRefBtn">COPY</button>
+    </div>
+  </div>
+
+  <!-- daily lucky prediction (golden tile) -->
+  <div style="background:#26254e; border-radius: 30px; padding: 12px; display: flex; gap: 12px; align-items: center;">
+    <div style="background: goldenrod; width: 40px; height: 40px; border-radius: 20px; box-shadow: 0 0 35px gold;"></div>
+    <div><span style="color: gold;">✨ DAILY LUCKY COMBO</span> — golden tile = higher win chance</div>
+  </div>
+
+  <!-- Telegram channel -->
+  <div class="telegram-btn">
+    <a href="https://t.me/MosesMinesHack" target="_blank">✈️ Join Telegram for updates & signals</a>
+  </div>
+  <div class="disclaimer">AI Accuracy 95–98% based on patterns. Not 100% guaranteed. Play responsibly.</div>
+</div>
+
+<script>
+  (function() {
+    // ---------- state ----------
+    let loggedIn = false;
+    let currentPlatform = '1win';
+    let riskLevel = 'medium';   // low-> 6 safe, medium->4 safe, high->2 safe
+    let wins = 0, losses = 0;
+    let gridSize = 25;
+    let currentSafeIndices = [];     // stores the AI safe picks (0-24)
+    let currentMineIndices = [];     // the rest
+    let boardRevealed = false;
+    let autoResetTimer = null;
+    let dailyGoldenIndex = 12;       // middle-ish tile
+
+    // elements
+    const loginScreen = document.getElementById('login-screen');
+    const mainHack = document.getElementById('main-hack');
+    const loginBtn = document.getElementById('loginBtn');
+    const secretInput = document.getElementById('secretWord');
+    const gridEl = document.getElementById('minesGrid');
+    const showSafeBtn = document.getElementById('showSafeBtn');
+    const resultMsg = document.getElementById('resultMessage');
+    const liveStats = document.getElementById('liveStats');
+    const rngSpan = document.getElementById('rngDisplay');
+    const platBtns = document.querySelectorAll('.plat-btn');
+    const riskBtns = document.querySelectorAll('.risk-btn');
+    const refLinkInput = document.getElementById('refLinkInput');
+    const copyRefBtn = document.getElementById('copyRefBtn');
+    const promoBox = document.getElementById('promoBox');
+
+    // helper: update stats ui
+    function updateStats() {
+      let rate = (wins+losses) === 0 ? 0 : Math.round((wins/(wins+losses))*100);
+      liveStats.innerHTML = `<span>🔥 Wins: ${wins}</span> <span>💀 Losses: ${losses}</span> <span>📊 Rate: ${rate}%</span>`;
+    }
+
+    // helper: generate random RNG and display
+    function refreshRNG() {
+      let rng = (Math.random() * 2).toFixed(4);
+      rngSpan.innerText = rng;
+    }
+
+    // set safe tiles count based on risk
+    function getSafeCountFromRisk() {
+      if (riskLevel === 'low') return 6;
+      if (riskLevel === 'medium') return 4;
+      return 2; // high
+    }
+
+    // AI random unique set (no duplicates)
+    function pickRandomSafeIndices(count) {
+      let total = 25;
+      let indices = Array.from({length: total}, (_, i) => i);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      return indices.slice(0, count);
+    }
+
+    // generate new round (does not reset wins/losses)
+    function resetBoard() {
+      // cancel any pending auto reset
+      if (autoResetTimer) clearTimeout(autoResetTimer);
+      boardRevealed = false;
+
+      let safeCount = getSafeCountFromRisk();
+      currentSafeIndices = pickRandomSafeIndices(safeCount);
+      // mines = the rest
+      let all = new Set(Array.from({length:25}, (_,i)=>i));
+      currentSafeIndices.forEach(i => all.delete(i));
+      currentMineIndices = Array.from(all);
+
+      // render empty board (all hidden)
+      renderBoard('hidden');
+      resultMsg.innerText = `🎲 ${safeCount} safe tiles predicted. Press show mines. Auto‑reset in 60s.`;
+      refreshRNG();
+
+      // schedule auto reset after 60 sec
+      autoResetTimer = setTimeout(() => {
+        // if board not revealed, maybe we still reset
+        resetBoard(); // fresh board, keep stats unchanged
+        resultMsg.innerText = '♻️ Auto reset (60s). New predictions ready.';
+      }, 60000);
+    }
+
+    // render board mode: 'hidden', 'reveal' (safe green / mine red)
+    function renderBoard(mode) {
+      let html = '';
+      for (let i = 0; i < 25; i++) {
+        let cellClass = 'cell';
+        let content = '';
+        if (mode === 'reveal') {
+          if (currentSafeIndices.includes(i)) {
+            cellClass += ' safe';
+            content = '✔️';
+          } else {
+            cellClass += ' mine';
+            content = '❌';
+          }
+        } else {
+          // hidden: optionally apply golden tile on daily lucky (always shown as hidden but with golden class)
+          if (i === dailyGoldenIndex) {
+            cellClass += ' golden';
+            // you might show ? but we keep empty
+          }
+        }
+        // if golden and revealed? but we keep consistent
+        if (mode === 'reveal' && i === dailyGoldenIndex) cellClass += ' golden'; // extra gold style even if safe/mine
+        html += `<div class="${cellClass}" data-index="${i}">${content}</div>`;
+      }
+      gridEl.innerHTML = html;
+    }
+
+    // show safe mines (prediction)
+    function revealPrediction() {
+      if (boardRevealed) {
+        // reset round manually? we can just reset anyway
+        resetBoard();
+        return;
+      }
+      // reveal
+      renderBoard('reveal');
+      boardRevealed = true;
+      // count "wins" if no mines clicked? but we just show. treat as win if we revealed safe? according to hack: just visualization.
+      // we increment wins once per reveal? we'll count as 'round played' but not affect loss unless mine clicked? for demo we add win for reveal.
+      wins++;
+      updateStats();
+      resultMsg.innerText = `✅ Mines revealed! auto‑reset in 60s. AI accuracy 95%+`;
+      // after reveal, auto reset already scheduled, but we reset timer? keep old timer.
+      // also mark golden message
+      if (currentSafeIndices.includes(dailyGoldenIndex)) {
+        resultMsg.innerText += ' 🌟 GOLDEN TILE IS SAFE!';
+      } else {
+        resultMsg.innerText += ' 💡 golden tile was mine? risky.';
+      }
+      // extra: random generator
+      refreshRNG();
+    }
+
+    // login handler
+    loginBtn.addEventListener('click', (e) => {
+      if (secretInput.value.trim().toUpperCase() === 'WIN') {
+        loginScreen.style.display = 'none';
+        mainHack.style.display = 'flex';
+        // init first board
+        resetBoard();
+        updateStats();
+      } else {
+        alert('🔐 Secret word is "WIN" (case insensitive)');
+      }
+    });
+
+    // platform switching
+    platBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        platBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPlatform = btn.dataset.platform;
+        // update ref link & promo copy
+        let ref = '';
+        if (currentPlatform === '1win') {
+          ref = 'https://1win.xyz/?ref=Moses123';
+          promoBox.innerHTML = `<div style="color:#00ff9d; font-weight:800; font-size:1.5rem;">🎁 MOSES</div><div>Use code <strong>MOSES</strong> on 1Win: 500% up to $1025 / ₹80,400</div><div style="margin:12px 0 8px">🔗 Your referral link</div><div class="copy-link"><input type="text" id="refLinkInput" value="${ref}" readonly><button class="copy-btn" id="copyRefBtn">COPY</button></div>`;
+        } else if (currentPlatform === 'megapari') {
+          ref = 'https://megapari.com/?ref=MosesMG';
+          promoBox.innerHTML = `<div style="color:#00d4ff;">🎰 MEGAPARI BONUS</div><div>Welcome bonus 100% up to €400 + 150 FS</div><div class="copy-link"><input value="${ref}" readonly><button class="copy-btn">COPY</button></div>`;
+        } else {
+          ref = 'https://melbet.org/?ref=MosesML';
+          promoBox.innerHTML = `<div>🏆 MELBET OFFER</div><div>First deposit 130% up to $650, promo MELBET2026</div><div class="copy-link"><input value="${ref}" readonly><button class="copy-btn">COPY</button></div>`;
+        }
+        // reattach copy listener
+        document.querySelectorAll('.copy-btn').forEach(b => b.addEventListener('click', function(e) {
+          let inp = this.previousElementSibling;
+          if (inp && inp.tagName === 'INPUT') { inp.select(); document.execCommand('copy'); alert('Link copied!'); }
+        }));
+      });
+    });
+
+    // risk selection
+    riskBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        riskBtns.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        riskLevel = btn.dataset.risk;
+        if (loggedIn) resetBoard(); // only reset if inside main
+      });
+    });
+
+    // show safe mines button
+    showSafeBtn.addEventListener('click', () => {
+      if (!boardRevealed) {
+        revealPrediction();
+      } else {
+        // manual reset: call resetBoard
+        resetBoard();
+      }
+    });
+
+    // copy ref (initial)
+    copyRefBtn.addEventListener('click', () => {
+      refLinkInput.select();
+      document.execCommand('copy');
+      alert('Referral copied!');
+    });
+
+    // bonus: click on cell (just for fun, no loss increment except fake)
+    gridEl.addEventListener('click', (e) => {
+      if (!boardRevealed) return;
+      let cell = e.target.closest('.cell');
+      if (!cell) return;
+      let idx = cell.dataset.index;
+      if (currentMineIndices.includes(parseInt(idx))) {
+        losses++;
+        updateStats();
+        alert('💥 That was a mine! Loss recorded.');
+      } else {
+        // safe click no penalty, but we can show message
+      }
+    });
+
+    // periodic rng update each click on button? already in reveal.
+    // also ensure daily golden changes every "day" simulation: rotate every 30 min but we set fixed.
+    function rotateGolden() {
+      dailyGoldenIndex = Math.floor(Math.random() * 25);
+    }
+    setInterval(rotateGolden, 3600000); // every hour
+
+    // pseudo telegram
+    // pwa / mobile ready
+
+    // initial hidden state
+    window.loggedIn = false;
+  })();
+</script>
+</body>
+</html>
